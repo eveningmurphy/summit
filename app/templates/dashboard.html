@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ session['member_name'] }}'s Dashboard</h1>
+
+<div class="dashboard-container">
+    <div class="dashboard-buttons">
+        <button class="btn" id="btnProposals">My Proposals</button>
+        <button class="btn" id="btnVotes">My Votes</button>
+        <button class="btn" id="btnInfo">My Information</button>
+        <a href="{{ url_for('logout') }}" class="btn" style="color: red">Logout</a>
+    </div>
+
+    <div class="dashboard-info">
+        <div id="proposalsSection" class="dashboard-section" style="display: none;">
+            <h2>My Proposals</h2>
+            {% for proposal in member_proposals %}
+            <div class="info-box">
+                <a href="{{ url_for('proposal', id=proposal['proposal_id']) }}">{{ proposal['proposal_title'] }}</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="votesSection" class="dashboard-section" style="display: none;">
+            <h2>My Votes</h2>
+            {% for vote in member_votes %}
+            <div class="info-box">
+                {{ vote['proposal_title'] }} - Voted: {{ vote['vote_value'] }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="infoSection" class="dashboard-section" style="display: none;">
+            <h2>My Information</h2>
+            <div class="info-box">
+                <strong>Name:</strong> {{ member_info['member_firstname'] }} {{ member_info['member_lastname'] }}
+            </div>
+            <div class="info-box">
+                <strong>Email:</strong> {{ member_info['member_email'] }}
+            </div>
+            <div class="info-box">
+                <strong>Role:</strong> {{ member_info['member_role'] }}
+            </div>
+            <div class="info-box">
+                <strong>Level:</strong> {{ member_info['member_level'] }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("btnProposals").addEventListener("click", function() {
+        toggleSection("proposalsSection");
+    });
+
+    document.getElementById("btnVotes").addEventListener("click", function() {
+        toggleSection("votesSection");
+    });
+
+    document.getElementById("btnInfo").addEventListener("click", function() {
+        toggleSection("infoSection");
+    });
+
+    function toggleSection(sectionId) {
+        // Hide all sections
+        var sections = document.querySelectorAll(".dashboard-section");
+        sections.forEach(function(section) {
+            section.style.display = "none";
+        });
+
+        // Show the selected section
+        document.getElementById(sectionId).style.display = "block";
+    }
+</script>
+
+{% endblock %}

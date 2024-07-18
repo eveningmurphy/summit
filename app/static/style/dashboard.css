@@ -1,0 +1,63 @@
+    /* Styling for dashboard layout */
+    .dashboard-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-top: 20px;
+    }
+
+    .dashboard-buttons {
+        width: 20%;
+    }
+
+    .dashboard-info {
+        width: 75%;
+        background-color: #f0f0f0;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Styling for buttons */
+    .btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        background-color: #f0f0f0;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #e0e0e0;
+    }
+
+    /* Styling for sections */
+    .dashboard-section {
+        margin-top: 20px;
+    }
+
+    .dashboard-section h2 {
+        margin-bottom: 10px;
+    }
+
+    .dashboard-section ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .dashboard-section ul li {
+        margin-bottom: 5px;
+    }
+
+    .info-box {
+        background-color: #ffffff;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }

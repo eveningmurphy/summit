@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Summit{% endblock %}</title>
+    {% block head %}
+    <link rel="icon" type="image/png" href="../static/img/summit_v1.png">
+    <!-- stylesheets + scripts -->
+    <link rel="stylesheet" href="../static/style/summit_general.css">
+    <link rel="stylesheet" href="../static/style/buttons.css">
+
+    <link rel="stylesheet" href="../static/style/log.css">
+    <link rel="stylesheet" href="../static/style/dashboard.css">
+    {% endblock %}
+</head>
+<body>
+    {% block navbar %}
+    <nav class="navbar">
+        <a href="/" class="nav-item {% if route == 'home' %}active{% endif %}" id="community-nav">Community</a>
+        <a href="/log" class="nav-item {% if route == 'log' %}active{% endif %}" id="log-nav">Log</a>
+        <a href="/dashboard" class="nav-item {% if route == 'dashboard' %}active{% endif %}" id="dashboard-nav">Dashboard</a>
+        <a href="/logout" class="nav-item {% if route == 'logout' %}active{% endif %}" id="signout-nav">Sign out</a>
+    </nav>
+    {% endblock %}
+
+    <main class="content">
+    {% block content %}
+    <!-- Main content will be inserted here -->
+    {% endblock %}
+    </main>
+
+    {% block scripts %}
+    <!--script src="{{ url_for('static', filename='main.js') }}"></script>
+    <script src="{{ url_for('static', filename='navigation.js') }}"></script-->
+    <script src="../static/js/navigation.js"></script>
+    <script src="../static/js/main.js"></script>
+    {% endblock %}
+</body>
+</html>
+

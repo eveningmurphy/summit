@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}
+Log
+{% endblock %}
+
+{% block content %}
+
+<h1>Events Log</h1>
+
+<!-- Uncomment and adjust filter form as needed -->
+<!--form action="{{ url_for('log') }}" method="GET">
+    <label for="filter_type">Filter by Type:</label>
+    <select name="filter_type" id="filter_type">
+        <option value="all">All</option>
+        <option value="proposal">Proposal</option>
+        <option value="vote">Vote</option>
+        <option value="general">General</option>
+    </select>
+    <button type="submit">Filter</button>
+</form-->
+
+<div class="log-container">
+    {% for log_entry in logs %}
+    <div class="log-entry">
+        <h3>{{ log_entry.log_title }}</h3>
+        <!-- Remove unnecessary comment and condition -->
+        <!--p>strong>Type:</strong> 
+            {% if log_entry.log_type == 'proposal' %}
+                Proposal
+            {% elif log_entry.log_type == 'vote' %}
+                Vote
+            {% else %}
+                General
+            {% endif %}
+        </p-->
+        <p>{{ log_entry.log_body }}</p>
+        <p><strong>Timestamp:</strong> {{ log_entry.log_timestamp }}</p>
+        {% if log_entry.log_notes %}
+            <p><strong>Notes:</strong> {{ log_entry.log_notes }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

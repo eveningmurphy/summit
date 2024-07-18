@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+View Proposal
+{% endblock %}
+
+{% block content %}
+    <h1>{{ proposal.proposal_title }}</h1>
+    <p>{{ proposal.proposal_body }}</p>
+    <p>Yes Votes: {{ proposal.proposal_yes_votes }}</p>
+    <p>No Votes: {{ proposal.proposal_no_votes }}</p>
+    <form action="{{ url_for('vote') }}" method="POST">
+        <input type="hidden" name="proposal_id" value="{{ proposal.proposal_id }}">
+        <button type="submit" name="vote_type" value="yes">Vote Yes</button>
+        <button type="submit" name="vote_type" value="no">Vote No</button>
+    </form>
+    <!-- if user is rep
+    {% if not proposal.finalized %}
+    <a href="{{ url_for('finalize', id=proposal.proposal_id) }}">Finalize Proposal</a>
+    {% else %}
+    <p>Proposal Finalized</p>
+    {% endif %} -->
+    <a href="{{ url_for('index') }}">Back to Proposals</a>
+{% endblock %}

@@ -1,0 +1,14 @@
+.comment {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.comment p {
+    margin: 5px 0;
+}
+
+#addCommentForm {
+    margin-top: 20px;
+}

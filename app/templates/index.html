@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}
+Community Channel
+{% endblock %}
+
+{% block content %}
+
+<h1>Welcome, {{ session['member_name'] }}!</h1>
+
+<h2>Your Team's Proposals</h2>
+{% if team_proposals %}
+<div>
+    <p>Team: {{ team_proposals[0]['team_name'] }}</p>
+    <ul>
+        {% for proposal in team_proposals %}
+        <li><a href="{{ url_for('proposal', id=proposal['proposal_id']) }}">{{ proposal['proposal_title'] }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% else %}
+<p>No proposals from your team yet.</p>
+{% endif %}
+
+<h2>General Community Proposals</h2>
+<a href="{{ url_for('submit_proposal') }}">Submit a New Proposal</a>
+<ul>
+    {% for proposal in general_proposals %}
+    <li><a href="{{ url_for('proposal', id=proposal['proposal_id']) }}">{{ proposal['proposal_title'] }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+Summit - Login
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<h1>Summit</h1>
+<div class="logo-container" width="270px" height="230px">
+    <img src="../static/img/summit_v1.png" width="270px" height="230px">
+</div>
+<h1>Log in</h1>
+<form method="post" action="{{ url_for('login') }}">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+    <input type="submit" value="Login">
+</form>
+{% endblock %}

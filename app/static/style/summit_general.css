@@ -1,0 +1,53 @@
+/* Reset default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #333333;
+}
+
+/* Navbar styling */
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #ff8c00; /* Orange color */
+    padding: 1em;
+}
+
+.nav-item {
+    color: white;
+    text-decoration: none;
+    margin: 0 1em;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nav-item:hover {
+    color: #ffd700; /* Lighter shade of orange */
+}
+
+.nav-item.active {
+    color: #ffd700;
+}
+
+/* Main content styling */
+.content {
+    padding: 2em;
+    text-align: center;
+}
+
+h1 {
+    color: #ff8c00;
+    margin-bottom: 0.5em;
+}
+
+p {
+    font-size: 1.2em;
+    line-height: 1.5;
+}
