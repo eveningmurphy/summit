@@ -1,3 +1,11 @@
+/* 
+Author: Eve Murphy
+Student ID: 20049423
+Date: 18/07/2024
+Description: Styles specific to the log page of the Summit application.
+             This stylesheet is used to style the log entries and related elements.
+*/
+
 .log-container {
     display: flex;
     flex-wrap: wrap;

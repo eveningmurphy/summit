@@ -1,3 +1,11 @@
+<!-- 
+Author: Eve Murphy
+Student ID: 20049423
+Date: 18/07/2024
+Description: This is the submit proposal page for the Summit application. 
+             It allows users to create and submit a new proposal.
+-->
+
 {% extends "base.html" %}
 
 {% block title %}
@@ -5,20 +13,30 @@ Create & Submit Proposal
 {% endblock %}
 
 {% block content %}
+<!-- Main container for the submit proposal page -->
 <div class="proposal-container">
     <h1>Submit a New Proposal</h1>
+    
+    <!-- Form for creating and submitting a new proposal -->
     <form method="post" action="{{ url_for('submit_proposal') }}">
+        
+        <!-- Title input field -->
         <div class="form-group">
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" class="form-control" required>
         </div>
+        
+        <!-- Body textarea field -->
         <div class="form-group">
             <label for="body">Body:</label>
             <textarea id="body" name="body" class="form-control" rows="6" required></textarea>
         </div>
+        
+        <!-- Submit button -->
         <div class="form-group">
             <input type="submit" value="Submit Proposal" class="btn btn-primary">
         </div>
+        
     </form>
 </div>
 {% endblock %}

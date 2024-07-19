@@ -1,3 +1,11 @@
+/* 
+Author: Eve Murphy
+Student ID: 20049423
+Date: 18/07/2024
+Description: This script manages the navigation bar functionality for the Summit application.
+             It updates the active state of navigation items based on user interactions.
+*/
+
 function setUp(){
   /*const nav_items = document.querySelectorAll(".nav-item");
   for (var i=0;i<nav_items.length;i++){

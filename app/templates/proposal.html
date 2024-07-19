@@ -1,3 +1,12 @@
+<!-- 
+Author: Eve Murphy
+Student ID: 20049423
+Date: 18/07/2024
+Description: This is the proposal page for the Summit application. 
+             It displays the details of a specific proposal and its comments.
+             It also allows users to add comments to a specific proposal
+-->
+
 {% extends "base.html" %}
 
 {% block title %}
@@ -5,8 +14,11 @@ View Proposal
 {% endblock %}
 
 {% block content %}
+<!-- Main container for the proposal page -->
 <div class="proposal-container centre-content">
     <div class="centered-content">
+
+        <!-- Proposal details section -->
         <div class="proposal">
             <h1>{{ proposal.proposal_title }}</h1>
             <hr>
@@ -18,6 +30,7 @@ View Proposal
             </div>
         </div>
 
+        <!-- Voting section (only visible if the user has not voted) -->
         {% if not has_voted %}
         <div class="vote-section">
             <form action="{{ url_for('vote') }}" method="POST">
@@ -30,10 +43,12 @@ View Proposal
 
         <hr>
 
+        <!-- Comments section -->
         <div class="comments-section">
             <h2>Comments</h2>
             <hr>
             <div id="commentsSection">
+                <!-- Display existing comments -->
                 {% if comments %}
                     {% for comment in comments %}
                     <div class="comment">
@@ -43,6 +58,7 @@ View Proposal
                     {% endfor %}
                 {% endif %}
 
+                <!-- Form to add a new comment -->
                 <h2>Add a Comment</h2>
                 <form id="addCommentForm" action="{{ url_for('add_comment', proposal_id=proposal.proposal_id) }}" method="POST">
                     <textarea name="thread_content" id="thread_content" rows="4" required></textarea>
@@ -50,8 +66,10 @@ View Proposal
                 </form>
             </div>
         </div>
-            <!-- Back link to return to proposals -->
-    <a class="back-link" href="{{ url_for('index') }}">Back to Proposals</a>
+
+        <!-- Link to return to the proposals page -->
+        <a class="back-link" href="{{ url_for('index') }}">Back to Proposals</a>
+
     </div>
 </div>
 

@@ -1,3 +1,11 @@
+/* 
+Author: Eve Murphy
+Student ID: 20049423
+Date: 18/07/2024
+Description: Styles for the comment threads in the Summit application.
+             This stylesheet is used to style the comment sections within proposals.
+*/
+
 #commentsSection{
     max-width: 800px; /* Adjust max-width as per your layout */
     margin: 20px auto; /* Center the container horizontally */

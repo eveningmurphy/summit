@@ -1,3 +1,11 @@
+<!-- 
+Author: Eve Murphy
+Student ID: 20049423
+Date: 18/07/2024
+Description: This is the main index page for the Summit application. 
+             It displays the user's team proposals and general community proposals.
+-->
+
 {% extends "base.html" %}
 
 {% block title %}
@@ -6,16 +14,23 @@ Community Channel
 
 {% block content %}
 
+<!-- Main heading welcoming the user -->
 <h1>Welcome, {{ session['member_name'] }}!</h1>
 
+<!-- Button to create a new proposal -->
 <a href="{{ url_for('submit_proposal') }}" class="btn-create-proposal">Create New Proposal</a>
 
+<!-- Container for displaying proposals -->
 <div class="proposals-container">
+
+    <!-- Container for user's team proposals -->
     <div class="proposals-type-container">
         <h2>Your Team's Proposals</h2>
         {% if team_proposals %}
         <div class="proposals-list">
+            <!-- Display the team name -->
             <p>Team: {{ team_proposals[0]['team_name'] }}</p>
+            <!-- List of team proposals -->
             {% for proposal in team_proposals %}
             <div class="proposal-item">
                 <a class="proposal-link" href="{{ url_for('proposal', id=proposal['proposal_id']) }}">{{ proposal['proposal_title'] }}</a>
@@ -23,20 +38,24 @@ Community Channel
             {% endfor %}
         </div>
         {% else %}
+        <!-- Message when no team proposals are available -->
         <p>No proposals from your team yet.</p>
         {% endif %}
     </div>
 
+    <!-- Container for general community proposals -->
     <div class="proposals-type-container">
         <h2>General Community Proposals</h2>
         <div class="proposals-list">
             {% if general_proposals %}
+                <!-- List of general community proposals -->
                 {% for proposal in general_proposals %}
                 <div class="proposal-item">
                     <a class="proposal-link" href="{{ url_for('proposal', id=proposal['proposal_id']) }}">{{ proposal['proposal_title'] }}</a>
                 </div>
                 {% endfor %}
             {% else %}
+            <!-- Message when no general community proposals are available -->
             <p>No proposals from the general community yet.</p>
             {% endif %}
         </div>

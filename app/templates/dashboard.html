@@ -1,3 +1,11 @@
+<!-- 
+Author: Eve Murphy
+Student ID: 20049423
+Date: 18/07/2024
+Description: This is the dashboard page for the Summit application. 
+             It displays the logged-in user's personal information, proposals, and votes.
+-->
+
 {% extends "base.html" %}
 
 {% block title %}
@@ -6,17 +14,25 @@ Dashboard
 
 {% block content %}
 
+<!-- Main heading displaying the user's name -->
 <h1>{{ session['member_name'] }}'s Dashboard</h1>
 
+<!-- Container for the dashboard content -->
 <div class="dashboard-container">
+
+    <!-- Button section for navigation within the dashboard -->
     <div class="dashboard-buttons">
         <button class="btn" id="btnProposals">My Proposals</button>
         <button class="btn" id="btnVotes">My Votes</button>
         <button class="btn" id="btnInfo">My Information</button>
+        <!-- Logout button with red text for visibility -->
         <a href="{{ url_for('logout') }}" class="btn" style="color: red">Logout</a>
     </div>
 
+    <!-- Section for displaying different types of dashboard content -->
     <div class="dashboard-info">
+        
+        <!-- Section for displaying user's proposals, initially hidden -->
         <div id="proposalsSection" class="dashboard-section" style="display: none;">
             <h2>My Proposals</h2>
             {% for proposal in member_proposals %}
@@ -26,6 +42,7 @@ Dashboard
             {% endfor %}
         </div>
 
+        <!-- Section for displaying user's votes, initially hidden -->
         <div id="votesSection" class="dashboard-section" style="display: none;">
             <h2>My Votes</h2>
             {% for vote in member_votes %}
@@ -35,6 +52,7 @@ Dashboard
             {% endfor %}
         </div>
 
+        <!-- Section for displaying user's personal information, initially hidden -->
         <div id="infoSection" class="dashboard-section" style="display: none;">
             <h2>My Information</h2>
             <div class="info-box">
@@ -53,6 +71,7 @@ Dashboard
     </div>
 </div>
 
+<!-- JavaScript for toggling between different sections of the dashboard -->
 <script>
     document.getElementById("btnProposals").addEventListener("click", function() {
         toggleSection("proposalsSection");

@@ -1,3 +1,10 @@
+/* 
+Author: Eve Murphy
+Student ID: 20049423
+Date: 18/07/2024
+Description: Styles for buttons used throughout the Summit application.
+             This stylesheet provides consistent styling for all button elements.
+*/
 
 #btnProposals, #btnVotes, #btnInfo{
     color: black;

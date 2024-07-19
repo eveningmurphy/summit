@@ -1,3 +1,11 @@
+/* 
+Author: Eve Murphy
+Student ID: 20049423
+Date: 18/07/2024
+Description: Styles for the home page of the Summit application.
+             This stylesheet provides the layout and appearance for the main index page.
+*/
+
 /* Container for team proposals and general community proposals */
 .proposals-container {
     display: flex;

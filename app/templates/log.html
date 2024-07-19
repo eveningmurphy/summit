@@ -1,3 +1,11 @@
+<!-- 
+Author: Eve Murphy
+Student ID: 20049423
+Date: 18/07/2024
+Description: This is the log page for the Summit application. 
+             It displays the log entries chronologically.
+-->
+
 {% extends "base.html" %}
 
 {% block title %}
@@ -6,10 +14,12 @@ Log
 
 {% block content %}
 
+<!-- Main heading for the log page -->
 <h1>Events Log</h1>
 
 <!-- Uncomment and adjust filter form as needed -->
-<!--form action="{{ url_for('log') }}" method="GET">
+<!-- 
+<form action="{{ url_for('log') }}" method="GET">
     <label for="filter_type">Filter by Type:</label>
     <select name="filter_type" id="filter_type">
         <option value="all">All</option>
@@ -18,24 +28,24 @@ Log
         <option value="general">General</option>
     </select>
     <button type="submit">Filter</button>
-</form-->
+</form>
+-->
 
+<!-- Container for displaying log entries -->
 <div class="log-container">
+    <!-- Loop through each log entry and display its details -->
     {% for log_entry in logs %}
     <div class="log-entry">
+        <!-- Title of the log entry -->
         <h3>{{ log_entry.log_title }}</h3>
-        <!-- Remove unnecessary comment and condition -->
-        <!--p>strong>Type:</strong> 
-            {% if log_entry.log_type == 'proposal' %}
-                Proposal
-            {% elif log_entry.log_type == 'vote' %}
-                Vote
-            {% else %}
-                General
-            {% endif %}
-        </p-->
+        
+        <!-- Body content of the log entry -->
         <p>{{ log_entry.log_body }}</p>
+        
+        <!-- Timestamp of the log entry -->
         <p><strong>Timestamp:</strong> {{ log_entry.log_timestamp }}</p>
+        
+        <!-- Optional notes field, shown only if notes are present -->
         {% if log_entry.log_notes %}
             <p><strong>Notes:</strong> {{ log_entry.log_notes }}</p>
         {% endif %}

@@ -1,11 +1,32 @@
+# Author: Eve Murphy
+# Student ID: 20049423
+# Date: 18/07/2024
+# Description: This script contains database functionalities necessary for creating
+#              & inserting new entries. Session & database connection handling is also included.
+
 import mysql.connector
 import hashlib
 
 # Helper function to hash passwords
 def hash_password(password):
+    """
+    Hash a plaintext password using SHA-256.
+
+    Args:
+        password (str): The plaintext password to be hashed.
+
+    Returns:
+        str: The hashed password.
+    """
     return hashlib.sha256(password.encode()).hexdigest()
 
 def get_db_connection():
+    """
+    Establish a connection to the MySQL database.
+
+    Returns:
+        mysql.connector.connection.MySQLConnection: The database connection object.
+    """
     # Add your database configuration
     conn = mysql.connector.connect(
         host="localhost",
@@ -24,11 +45,20 @@ def get_db_connection():
     """
     return conn
 
-# Functionalities for app.py
-
 # Session handling
 
 def login(email, password):
+    """
+    Authenticate a user by email and password.
+
+    Args:
+        email (str): The user's email address.
+        password (str): The user's password.
+
+    Returns:
+        dict: A dictionary containing the user's information if authentication is successful.
+              None if authentication fails.
+    """
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -45,26 +75,57 @@ def login(email, password):
 # Proposal
 
 def get_proposal_by_id(proposal_id):
+    """
+    Retrieve a proposal by its ID.
+
+    Args:
+        proposal_id (int): The ID of the proposal.
+
+    Returns:
+        dict: A dictionary containing the proposal details.
+    """
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
     # Query to fetch proposal details
     query = "SELECT * FROM proposal WHERE proposal_id = %s"
     cursor.execute(query, (proposal_id,))
-    return cursor.fetchone()
+    proposal = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return proposal
 
 def insert_proposal(proposal_title, proposal_body, member_id):
+    """
+    Insert a new proposal into the database.
+
+    Args:
+        proposal_title (str): The title of the proposal.
+        proposal_body (str): The body content of the proposal.
+        member_id (int): The ID of the member creating the proposal.
+    """
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("""
         INSERT INTO proposal (proposal_title, proposal_body, proposal_priority, proposal_majority, proposal_status, proposal_timestamp, proposal_yes_votes, proposal_no_votes, member_id)
         VALUES (%s, %s, %s, %s, %s, NOW(), %s, %s, %s)
-        """, (proposal_title, proposal_body, 'Normal', 50, 'Open', 0, 0, member_id))
+    """, (proposal_title, proposal_body, 'Normal', 50, 'Open', 0, 0, member_id))
     conn.commit()
     cursor.close()
     conn.close()
 
 def get_general_proposals(team_id):
+    """
+    Retrieve general community proposals not associated with the user's team.
+
+    Args:
+        team_id (int): The ID of the user's team.
+
+    Returns:
+        list: A list of dictionaries containing general proposal details.
+    """
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -84,8 +145,17 @@ def get_general_proposals(team_id):
     return general_proposals
 
 def get_team_proposals(team_id):
+    """
+    Retrieve proposals associated with the user's team.
+
+    Args:
+        team_id (int): The ID of the user's team.
+
+    Returns:
+        list: A list of dictionaries containing team proposal details.
+    """
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
 
     # Fetch proposals from user's team including team name
     cursor.execute("""
@@ -105,6 +175,15 @@ def get_team_proposals(team_id):
 # Thread
 
 def get_comments_by_proposal_id(proposal_id):
+    """
+    Retrieve comments for a specific proposal.
+
+    Args:
+        proposal_id (int): The ID of the proposal.
+
+    Returns:
+        list: A list of dictionaries containing comment details.
+    """
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -135,6 +214,18 @@ def get_comments_by_proposal_id(proposal_id):
     return results
 
 def insert_comment(proposal_id, member_id, thread_content, thread_timestamp):
+    """
+    Insert a new comment into the database.
+
+    Args:
+        proposal_id (int): The ID of the proposal being commented on.
+        member_id (int): The ID of the member making the comment.
+        thread_content (str): The content of the comment.
+        thread_timestamp (datetime): The timestamp of the comment.
+
+    Returns:
+        int: The ID of the newly inserted comment.
+    """
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -157,12 +248,22 @@ def insert_comment(proposal_id, member_id, thread_content, thread_timestamp):
 # User/member
 
 def get_member_name_by_id(member_id):
+    """
+    Retrieve the first name and last name of a member by their ID.
+
+    Args:
+        member_id (int): The ID of the member.
+
+    Returns:
+        tuple: A tuple containing the first name and last name of the member.
+               If the member is not found, (None, None) is returned.
+    """
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
     # Query to fetch member name by ID
     cursor.execute("SELECT member_firstname, member_lastname FROM member WHERE member_id = %s", (member_id,))
-    result = cursor.fetchone()  # Use fetchone instead of fetchAll
+    result = cursor.fetchone()
 
     cursor.close()
     conn.close()
@@ -175,6 +276,15 @@ def get_member_name_by_id(member_id):
         return None, None  # Or handle the case appropriately
 
 def get_member_information(member_id):
+    """
+    Retrieve detailed information of a member by their ID.
+
+    Args:
+        member_id (int): The ID of the member.
+
+    Returns:
+        dict: A dictionary containing the member's information.
+    """
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     
@@ -193,6 +303,16 @@ def get_member_information(member_id):
     return member_info
 
 def get_members_info(cursor, member_ids):
+    """
+    Retrieve information of multiple members by their IDs.
+
+    Args:
+        cursor (mysql.connector.cursor.MySQLCursor): The database cursor.
+        member_ids (list): A list of member IDs.
+
+    Returns:
+        dict: A dictionary mapping member IDs to their respective information.
+    """
     # Query to fetch member information for given member_ids
     query = """
     SELECT member_id, member_firstname, member_lastname
@@ -206,6 +326,15 @@ def get_members_info(cursor, member_ids):
     return member_info
 
 def get_member_proposals(member_id):
+    """
+    Retrieve proposals created by a specific member.
+
+    Args:
+        member_id (int): The ID of the member.
+
+    Returns:
+        list: A list of dictionaries containing the member's proposals.
+    """
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -223,9 +352,19 @@ def get_member_proposals(member_id):
     return member_proposals
 
 def get_member_votes(member_id):
+    """
+    Retrieve votes cast by a specific member.
+
+    Args:
+        member_id (int): The ID of the member.
+
+    Returns:
+        list: A list of dictionaries containing the member's votes and proposal titles.
+    """
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
+    # Fetch member votes along with proposal titles
     cursor.execute("""
     SELECT v.*, p.proposal_title
     FROM vote v
@@ -239,8 +378,17 @@ def get_member_votes(member_id):
 
     return member_votes
 
-# Return true/false for if a user has voted on a specific proposal
 def has_user_voted(member_id, proposal_id):
+    """
+    Check if a user has voted on a specific proposal.
+
+    Args:
+        member_id (int): The ID of the member.
+        proposal_id (int): The ID of the proposal.
+
+    Returns:
+        bool: True if the user has voted on the proposal, False otherwise.
+    """
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -255,6 +403,12 @@ def has_user_voted(member_id, proposal_id):
 # Log
 
 def get_log_entries():
+    """
+    Retrieve all log entries from the database.
+
+    Returns:
+        list: A list of dictionaries containing log entries.
+    """
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -272,8 +426,18 @@ def get_log_entries():
 # Team
 
 def get_team_info(member_id):
+    """
+    Retrieve team information associated with a specific member.
+
+    Args:
+        member_id (int): The ID of the member.
+
+    Returns:
+        dict: A tuple containing the team ID and team name.
+    """
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
+
     # Fetch user's team ID and name
     cursor.execute("""
         SELECT m.team_id, t.team_name
@@ -282,7 +446,7 @@ def get_team_info(member_id):
         WHERE m.member_id = %s
     """, (member_id,))
 
-    team_info = cursor.fetchall()
+    team_info = cursor.fetchone()
     cursor.close()
     conn.close()
 

@@ -1,3 +1,11 @@
+<!-- 
+Author: Eve Murphy
+Student ID: 20049423
+Date: 18/07/2024
+Description: This is the login page for the Summit application. 
+             It allows users to log in to the application.
+-->
+
 {% extends "base.html" %}
 
 {% block title %}
@@ -7,20 +15,32 @@ Summit - Login
 {% block navbar %}{% endblock %}
 
 {% block content %}
+<!-- Main container for the login page -->
 <div class="login-container">
+    
+    <!-- Logo section -->
     <div class="logo-container">
         <img src="../static/img/summit_v1.png" alt="Summit Logo">
     </div>
+
+    <!-- Page title -->
     <h1>Log in to Summit</h1>
+
+    <!-- Login form -->
     <form method="post" action="{{ url_for('login') }}">
+        <!-- Email input field -->
         <div class="form-group">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" placeholder="Enter your email" required>
         </div>
+        
+        <!-- Password input field -->
         <div class="form-group">
             <label for="password">Password</label>
             <input type="password" id="password" name="password" placeholder="Enter your password" required>
         </div>
+        
+        <!-- Submit button -->
         <button type="submit" class="btn-login">Login</button>
     </form>
 </div>

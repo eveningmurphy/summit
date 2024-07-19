@@ -1,14 +1,26 @@
+# Author: Eve Murphy
+# Student ID: 20049423
+# Date: 18/07/2024
+# Description: This script is the main executable for the Summit application.
+#              Routes for each page on the web app are included here, with back-end
+#              database functionality imported from db.py & contract.py.
+#              To start the application, execute this script.
+
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import datetime
 import contracts
 import db
 
+# Initialize Flask application
 app = Flask(__name__)
-app.secret_key = 'orangemountain' # Ensure to use a secure key in production
+app.secret_key = 'orangemountain'  # Ensure to use a secure key in production
 
-# Routes
+# Route for the home page
 @app.route('/')
 def index():
+    """
+    Render the home page with team and general proposals.
+    """
     if 'member_id' in session:
         member_id = session['member_id']
         conn = db.get_db_connection()
@@ -56,9 +68,13 @@ def index():
         return render_template('index.html', team_proposals=team_proposals, general_proposals=general_proposals, team_name=team_name, route="home")
     else:
         return redirect(url_for('login'))
-    
+
+# Route for the dashboard page
 @app.route('/dashboard')
 def dashboard():
+    """
+    Render the dashboard page with member information, proposals, and votes.
+    """
     if 'member_id' in session:
         member_id = session['member_id']
 
@@ -72,9 +88,13 @@ def dashboard():
         return render_template('dashboard.html', member_info=member_info, member_proposals=member_proposals, member_votes=member_votes, route="dashboard")
     else:
         return redirect(url_for('login'))
-    
+
+# Route for the log page
 @app.route('/log')
 def log():
+    """
+    Render the log page with log entries.
+    """
     if 'member_id' in session:
         # Fetch all log entries chronologically
         logs = db.get_log_entries()
@@ -82,8 +102,12 @@ def log():
     else:
         return redirect(url_for('login'))
 
+# Route for the login page and authentication
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """
+    Handle user login.
+    """
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -105,8 +129,12 @@ def login():
             return "Login failed. Please check your credentials and try again."
     return render_template('login.html')
 
+# Route for logging out
 @app.route('/logout')
 def logout():
+    """
+    Handle user logout.
+    """
     session.pop('member_id', None)
     session.pop('member_name', None)
     
@@ -120,8 +148,12 @@ def logout():
     
     return redirect(url_for('login'))
 
+# Route for viewing a specific proposal
 @app.route('/proposal/<int:id>', methods=['GET'])
 def proposal(id):
+    """
+    Display a specific proposal with its comments.
+    """
     if 'member_id' not in session:
         return redirect(url_for('login'))
     
@@ -131,8 +163,12 @@ def proposal(id):
     
     return render_template('proposal.html', proposal=proposal, comments=comments, has_voted=has_voted)
 
+# Route for adding a comment to a proposal
 @app.route('/add_comment/<int:proposal_id>', methods=['POST'])
 def add_comment(proposal_id):
+    """
+    Add a comment to a specific proposal.
+    """
     if 'member_id' not in session:
         return jsonify({'success': False}), 403
     
@@ -145,8 +181,8 @@ def add_comment(proposal_id):
     
     if new_comment_id:
         member_firstname, member_lastname = db.get_member_name_by_id(member_id)  # Function to fetch member name from the DB
-        member_name = member_firstname+" "+member_lastname
-        print("membername: ",member_name)
+        member_name = member_firstname + " " + member_lastname
+        print("membername: ", member_name)
         comment = {
             'thread_content': thread_content,
             'thread_timestamp': thread_timestamp,
@@ -156,8 +192,12 @@ def add_comment(proposal_id):
     else:
         return jsonify({'success': False})
 
+# Route for submitting a new proposal
 @app.route('/submit_proposal', methods=['GET', 'POST'])
 def submit_proposal():
+    """
+    Handle submission of a new proposal.
+    """
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
@@ -176,8 +216,12 @@ def submit_proposal():
     
     return render_template('submit_proposal.html')
 
+# Route for voting on a proposal
 @app.route('/vote', methods=['POST'])
 def vote():
+    """
+    Handle voting on a proposal.
+    """
     proposal_id = request.form['proposal_id']
     vote_type = request.form['vote_type']
     member_id = session['member_id']
@@ -202,10 +246,15 @@ def vote():
     
     return redirect(url_for('proposal', id=proposal_id))
 
+# Route for finalizing a proposal
 @app.route('/finalize/<int:id>')
 def finalize(id):
+    """
+    Finalize a specific proposal.
+    """
     contracts.ProposalContract.finalize(id)
     return redirect(url_for('proposal', id=id))
 
+# Main entry point of the application
 if __name__ == '__main__':
     app.run(debug=True)

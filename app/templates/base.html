@@ -1,3 +1,11 @@
+<!-- 
+Author: Eve Murphy
+Student ID: 20049423
+Date: 18/07/2024
+Description: This is the base template for the Summit application. 
+             It contains the common structure and includes for the other templates.
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,10 +14,9 @@
     <title>{% block title %}Summit{% endblock %}</title>
     {% block head %}
     <link rel="icon" type="image/png" href="../static/img/summit_v1.png">
-    <!-- stylesheets + scripts -->
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="../static/style/summit_general.css">
     <link rel="stylesheet" href="../static/style/buttons.css">
-
     <link rel="stylesheet" href="../static/style/log.css">
     <link rel="stylesheet" href="../static/style/dashboard.css">
     <link rel="stylesheet" href="../static/style/thread.css">
@@ -35,11 +42,9 @@
     </main>
 
     {% block scripts %}
-    <!--script src="{{ url_for('static', filename='main.js') }}"></script>
-    <script src="{{ url_for('static', filename='navigation.js') }}"></script-->
+    <!-- Scripts -->
     <script src="../static/js/navigation.js"></script>
     <script src="../static/js/main.js"></script>
     {% endblock %}
 </body>
 </html>
-
