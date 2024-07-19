@@ -1,3 +1,55 @@
-.btn{
+
+#btnProposals, #btnVotes, #btnInfo{
+    color: black;
+}
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
     font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn.btn-primary, .btn-create-proposal,.btn-login {
+        background-color: #28a745;
+
+}
+.btn.btn-primary:hover {
+    background-color: #218838;
+}
+
+.btn-create-proposal {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px; /* Adjust as needed */
+}
+
+.btn-create-proposal:hover {
+    background-color: #218838;
+}
+
+.btn-login {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-login:hover {
+    background-color: #218838;
 }

@@ -41,7 +41,7 @@ class LogContract:
         # Prepare the SQL query to insert a new log entry
         sql = """
             INSERT INTO log (log_title, log_body, log_notes, log_type, org_id, log_timestamp)
-            VALUES (%s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s)
         """
         timestamp = datetime.datetime.now()
         cursor.execute(sql, (log_title, log_body, log_notes, log_type, org_id, timestamp))

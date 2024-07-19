@@ -7,29 +7,56 @@ app = Flask(__name__)
 app.secret_key = 'orangemountain' # Ensure to use a secure key in production
 
 # Routes
-
 @app.route('/')
 def index():
     if 'member_id' in session:
         member_id = session['member_id']
+        conn = db.get_db_connection()
+        cursor = conn.cursor(dictionary=True)
         
         # Fetch user's team ID and name
-        team_info = db.get_team_info(member_id)
+        cursor.execute("""
+            SELECT m.team_id, t.team_name
+            FROM member m
+            LEFT JOIN team t ON m.team_id = t.team_id
+            WHERE m.member_id = %s
+        """, (member_id,))
+        team_info = cursor.fetchone()
+        
         if team_info:
-            team_id, team_name = team_info
+            team_id = team_info['team_id']
+            team_name = team_info['team_name']
         else:
             team_id = None
             team_name = "Unknown"  # Default name if no team found
-
+        
         # Fetch proposals from user's team including team name
-        team_proposals = db.get_team_proposals(team_id)
+        cursor.execute("""
+            SELECT p.*, t.team_name AS team_name
+            FROM proposal p
+            JOIN member m ON p.member_id = m.member_id
+            LEFT JOIN team t ON m.team_id = t.team_id
+            WHERE m.team_id = %s
+        """, (team_id,))
+        team_proposals = cursor.fetchall()
+        
         # Fetch general proposals (not from the user's team) including team name
-        general_proposals = db.get_general_proposals(team_id)
+        cursor.execute("""
+            SELECT p.*, t.team_name AS team_name
+            FROM proposal p
+            LEFT JOIN member m ON p.member_id = m.member_id
+            LEFT JOIN team t ON m.team_id = t.team_id
+            WHERE m.team_id != %s OR m.team_id IS NULL
+        """, (team_id,))
+        general_proposals = cursor.fetchall()
+        
+        cursor.close()
+        conn.close()
         
         return render_template('index.html', team_proposals=team_proposals, general_proposals=general_proposals, team_name=team_name, route="home")
     else:
         return redirect(url_for('login'))
-
+    
 @app.route('/dashboard')
 def dashboard():
     if 'member_id' in session:
@@ -151,12 +178,18 @@ def submit_proposal():
 
 @app.route('/vote', methods=['POST'])
 def vote():
-    # Simulated smart contract operations
     proposal_id = request.form['proposal_id']
     vote_type = request.form['vote_type']
     member_id = session['member_id']
     
-    contracts.VoteContract.cast_vote(vote_type, proposal_id, member_id)
+    conn = db.get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO vote (vote_value, proposal_id, member_id)
+        VALUES (%s, %s, %s)
+    """, (vote_type, proposal_id, member_id))
+    conn.commit()
+    
     contracts.ProposalContract.vote(proposal_id, vote_type)
     
     # Insert a log entry for voting

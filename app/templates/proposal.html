@@ -5,72 +5,54 @@ View Proposal
 {% endblock %}
 
 {% block content %}
-    <h1>{{ proposal.proposal_title }}</h1>
-    <p>{{ proposal.proposal_body }}</p>
-    <p>Yes Votes: {{ proposal.proposal_yes_votes }}</p>
-    <p>No Votes: {{ proposal.proposal_no_votes }}</p>
-    {% if not has_voted %}
-    <form action="{{ url_for('vote') }}" method="POST">
-        <input type="hidden" name="proposal_id" value="{{ proposal.proposal_id }}">
-        <button type="submit" name="vote_type" value="yes">Vote Yes</button>
-        <button type="submit" name="vote_type" value="no">Vote No</button>
-    </form>
-    {% endif %}
+<div class="proposal-container centre-content">
+    <div class="centered-content">
+        <div class="proposal">
+            <h1>{{ proposal.proposal_title }}</h1>
+            <hr>
+            <p>{{ proposal.proposal_body }}</p>
+            <hr>
+            <div class="proposal-footer">
+                <p>Yes Votes: {{ proposal.proposal_yes_votes }}</p>
+                <p>No Votes: {{ proposal.proposal_no_votes }}</p>
+            </div>
+        </div>
 
-    {% if comments %}
-        <h2>Comments</h2>
-    {% endif %}
-<div id="commentsSection">
-    {% for comment in comments %}
-    <div class="comment">
-        <p><strong>{{ comment.member_name }}</strong> ({{ comment.thread_timestamp }}):</p>
-        <p>{{ comment.thread_content }}</p>
+        {% if not has_voted %}
+        <div class="vote-section">
+            <form action="{{ url_for('vote') }}" method="POST">
+                <input type="hidden" name="proposal_id" value="{{ proposal.proposal_id }}">
+                <button type="submit" name="vote_type" value="yes">Vote Yes</button>
+                <button type="submit" name="vote_type" value="no">Vote No</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <hr>
+
+        <div class="comments-section">
+            <h2>Comments</h2>
+            <hr>
+            <div id="commentsSection">
+                {% if comments %}
+                    {% for comment in comments %}
+                    <div class="comment">
+                        <p><strong>{{ comment.member_firstname }} {{ comment.member_lastname }}</strong> ({{ comment.thread_timestamp }}):</p>
+                        <p>{{ comment.thread_content }}</p>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+
+                <h2>Add a Comment</h2>
+                <form id="addCommentForm" action="{{ url_for('add_comment', proposal_id=proposal.proposal_id) }}" method="POST">
+                    <textarea name="thread_content" id="thread_content" rows="4" required></textarea>
+                    <button type="submit">Submit Comment</button>
+                </form>
+            </div>
+        </div>
+            <!-- Back link to return to proposals -->
+    <a class="back-link" href="{{ url_for('index') }}">Back to Proposals</a>
     </div>
-    {% endfor %}
+</div>
 
-    <h2>Add a Comment</h2>
-    <form id="addCommentForm" action="{{ url_for('add_comment', proposal_id=proposal.proposal_id) }}" method="POST">
-        <textarea name="thread_content" id="thread_content" rows="4" required></textarea>
-        <button type="submit">Submit Comment</button>
-    </form>
-
-    <script>
-    document.getElementById("addCommentForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        
-        const formData = new FormData(event.target);
-        
-        fetch(event.target.action, {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const newComment = document.createElement('div');
-                newComment.className = 'comment';
-                newComment.innerHTML = `
-                    <p><strong>${data.comment.member_name}</strong> (${data.comment.thread_timestamp}):</p>
-                    <p>${data.comment.thread_content}</p>
-                `;
-                document.getElementById('commentsSection').appendChild(newComment);
-                event.target.reset();
-            } else {
-                alert('Error adding comment');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error adding comment');
-        });
-    });
-    </script>
-
-    <!-- if user is rep
-    {% if not proposal.finalized %}
-    <a href="{{ url_for('finalize', id=proposal.proposal_id) }}">Finalize Proposal</a>
-    {% else %}
-    <p>Proposal Finalized</p>
-    {% endif %} -->
-    <a href="{{ url_for('index') }}">Back to Proposals</a>
 {% endblock %}

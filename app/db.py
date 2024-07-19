@@ -53,26 +53,6 @@ def get_proposal_by_id(proposal_id):
     cursor.execute(query, (proposal_id,))
     return cursor.fetchone()
 
-def get_comments_by_proposal_id(proposal_id):
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    # Query to fetch comments for a specific proposal
-    query = """
-    SELECT c.thread_content, c.thread_timestamp, m.member_firstname, m.member_lastname 
-    FROM thread c 
-    JOIN member m ON c.member_id = m.member_id 
-    WHERE c.proposal_id = %s
-    ORDER BY c.thread_timestamp ASC
-    """
-    cursor.execute(query, (proposal_id,))
-    results = cursor.fetchall()
-    
-    cursor.close()
-    conn.close()
-    
-    return results
-
 def insert_proposal(proposal_title, proposal_body, member_id):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -86,7 +66,7 @@ def insert_proposal(proposal_title, proposal_body, member_id):
 
 def get_general_proposals(team_id):
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
 
     # Fetch general proposals (not from the user's team) including team name
     cursor.execute("""
@@ -120,9 +100,39 @@ def get_team_proposals(team_id):
     cursor.close()
     conn.close()
 
-    return team_proposals[0]
+    return team_proposals
 
 # Thread
+
+def get_comments_by_proposal_id(proposal_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Query to fetch comments for a specific proposal
+    query = """
+    SELECT c.thread_content, c.thread_timestamp, c.member_id
+    FROM thread c 
+    WHERE c.proposal_id = %s
+    ORDER BY c.thread_timestamp ASC
+    """
+    cursor.execute(query, (proposal_id,))
+    results = cursor.fetchall()
+    
+    if results:
+        # Fetch member information separately
+        member_ids = [result['member_id'] for result in results]
+        member_info = get_members_info(cursor, member_ids)
+        
+        # Map member info to results
+        for result in results:
+            member_id = result['member_id']
+            result['member_firstname'] = member_info[member_id]['member_firstname']
+            result['member_lastname'] = member_info[member_id]['member_lastname']
+
+    cursor.close()
+    conn.close()
+    
+    return results
 
 def insert_comment(proposal_id, member_id, thread_content, thread_timestamp):
     conn = get_db_connection()
@@ -182,6 +192,19 @@ def get_member_information(member_id):
     
     return member_info
 
+def get_members_info(cursor, member_ids):
+    # Query to fetch member information for given member_ids
+    query = """
+    SELECT member_id, member_firstname, member_lastname
+    FROM member
+    WHERE member_id IN ({})
+    """.format(','.join(['%s'] * len(member_ids)))
+    
+    cursor.execute(query, member_ids)
+    member_info = {row['member_id']: row for row in cursor.fetchall()}
+    
+    return member_info
+
 def get_member_proposals(member_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -197,7 +220,7 @@ def get_member_proposals(member_id):
     cursor.close()
     conn.close()
 
-    return member_proposals[0]
+    return member_proposals
 
 def get_member_votes(member_id):
     conn = get_db_connection()

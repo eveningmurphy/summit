@@ -7,16 +7,21 @@ Summit - Login
 {% block navbar %}{% endblock %}
 
 {% block content %}
-<h1>Summit</h1>
-<div class="logo-container" width="270px" height="230px">
-    <img src="../static/img/summit_v1.png" width="270px" height="230px">
+<div class="login-container">
+    <div class="logo-container">
+        <img src="../static/img/summit_v1.png" alt="Summit Logo">
+    </div>
+    <h1>Log in to Summit</h1>
+    <form method="post" action="{{ url_for('login') }}">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn-login">Login</button>
+    </form>
 </div>
-<h1>Log in</h1>
-<form method="post" action="{{ url_for('login') }}">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required><br><br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required><br><br>
-    <input type="submit" value="Login">
-</form>
 {% endblock %}
